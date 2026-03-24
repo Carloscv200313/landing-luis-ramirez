@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Color Palette */
+  --cream: #f5f1ed;
+  --charcoal: #1a1815;
+  --taupe: #a89f99;
+  --gold: #c9a961;
+  --warm-white: #faf8f5;
+
+  /* Design Tokens */
+  --background: var(--cream);
+  --foreground: var(--charcoal);
+  --card: var(--warm-white);
+  --card-foreground: var(--charcoal);
+  --popover: var(--warm-white);
+  --popover-foreground: var(--charcoal);
+  --primary: var(--charcoal);
+  --primary-foreground: var(--cream);
+  --secondary: var(--taupe);
+  --secondary-foreground: var(--warm-white);
+  --muted: var(--taupe);
+  --muted-foreground: var(--charcoal);
+  --accent: var(--gold);
+  --accent-foreground: var(--charcoal);
+  --destructive: #d32f2f;
+  --destructive-foreground: var(--warm-white);
+  --border: var(--taupe);
+  --input: var(--warm-white);
+  --ring: var(--gold);
+  --chart-1: var(--gold);
+  --chart-2: var(--taupe);
+  --chart-3: var(--charcoal);
+  --chart-4: var(--cream);
+  --chart-5: var(--warm-white);
+  --radius: 0;
+  --sidebar: var(--cream);
+  --sidebar-foreground: var(--charcoal);
+  --sidebar-primary: var(--charcoal);
+  --sidebar-primary-foreground: var(--cream);
+  --sidebar-accent: var(--gold);
+  --sidebar-accent-foreground: var(--charcoal);
+  --sidebar-border: var(--taupe);
+  --sidebar-ring: var(--gold);
+}
+
+@theme inline {
+  --font-sans: "Lato", "Lato Fallback";
+  --font-serif: "Playfair Display", "Playfair Display Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius));
+  --radius-md: calc(var(--radius));
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius));
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1 {
+    @apply text-7xl md:text-7xl font-serif font-normal leading-tight;
+  }
+
+  h2 {
+    @apply text-5xl md:text-5xl font-serif font-normal leading-tight;
+  }
+
+  h3 {
+    @apply text-xl font-serif font-normal;
+  }
+
+  p {
+    @apply text-base leading-relaxed;
+  }
+
+  small {
+    @apply text-sm;
+  }
+}
+
+/* Custom utility classes */
+.line-accent {
+  @apply h-0.5 w-12 bg-accent;
+}
+
+/* Removed invalid import and defined animations directly */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
