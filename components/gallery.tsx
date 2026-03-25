@@ -9,14 +9,14 @@ interface GalleryProps {
 const translations = {
   es: {
     heading: "Presencia",
-    subheading: "La marca personal también se construye con presencia, claridad y visión.",
+    subheading: "La presencia también se construye en escenario, relaciones, liderazgo y comunidad.",
     close: "Cerrar",
     previous: "Anterior",
     next: "Siguiente",
   },
   en: {
     heading: "Presence",
-    subheading: "Personal brand is also built through presence, clarity, and vision.",
+    subheading: "Presence is also built on stage, through relationships, leadership, and community.",
     close: "Close",
     previous: "Previous",
     next: "Next",
@@ -26,33 +26,35 @@ const translations = {
 const galleryItems = [
   {
     id: 1,
-    image: "/images/luis-beige-sentado.jpg",
-    title: { es: "Presencia", en: "Presence" },
-    objectPosition: "center top",
+    image: "/presentaciones/Luis-azul-conferencia.jpg",
+    title: { es: "Liderazgo", en: "Leadership" },
+    objectPosition: "center center",
+    layoutClass: "md:col-span-2 lg:col-span-7",
+    aspectClass: "aspect-[4/3] md:aspect-[16/10]",
   },
   {
     id: 2,
-    image: "/images/Luis-negro-pensando.jpg",
-    title: { es: "Visión", en: "Vision" },
+    image: "/presentaciones/Luis-beige-acompañado.jpg",
+    title: { es: "Alianzas", en: "Partnerships" },
     objectPosition: "center top",
+    layoutClass: "lg:col-span-5",
+    aspectClass: "aspect-[3/4]",
   },
   {
     id: 3,
-    image: "/images/luis-azul-mirandocamara.jpg",
-    title: { es: "Confianza", en: "Confidence" },
+    image: "/presentaciones/Luis-estado.jpg",
+    title: { es: "Escenario", en: "Stage" },
     objectPosition: "center top",
+    layoutClass: "lg:col-span-4",
+    aspectClass: "aspect-[3/4] md:aspect-[4/5]",
   },
   {
     id: 4,
-    image: "/images/luis-negro-mirandoreloj.jpg",
-    title: { es: "Disciplina", en: "Discipline" },
-    objectPosition: "center top",
-  },
-  {
-    id: 5,
-    image: "/images/luis-beige-parado.jpg",
-    title: { es: "Identidad", en: "Identity" },
-    objectPosition: "center top",
+    image: "/presentaciones/luis-empleados-conferencia.jpg",
+    title: { es: "Comunidad", en: "Community" },
+    objectPosition: "center center",
+    layoutClass: "md:col-span-2 lg:col-span-8",
+    aspectClass: "aspect-[16/10] md:aspect-[16/9]",
   },
 ]
 
@@ -85,16 +87,14 @@ export default function Gallery({ language }: GalleryProps) {
           <div className="line-accent"></div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {galleryItems.map((item, index) => (
+        <div className="grid items-start grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-12">
+          {galleryItems.map((item) => (
             <div
               key={item.id}
               onClick={() => setSelectedId(item.id)}
-              className={`group cursor-pointer overflow-hidden border border-taupe/15 bg-charcoal/5 ${
-                index % 3 === 1 ? "lg:translate-y-8" : index % 3 === 2 ? "lg:-translate-y-6" : ""
-              }`}
+              className={`group self-start cursor-pointer overflow-hidden border border-taupe/15 bg-charcoal/5 ${item.layoutClass}`}
             >
-              <div className="relative aspect-[2/3] overflow-hidden">
+              <div className={`relative overflow-hidden ${item.aspectClass}`}>
                 <img
                   src={item.image || "/placeholder.svg"}
                   alt={item.title[language]}

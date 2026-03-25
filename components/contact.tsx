@@ -7,7 +7,7 @@ interface ContactProps {
   language: "es" | "en"
 }
 
-const contactEmail = "hello@luisramirez.com"
+const contactEmail = "2016luis1992@gmail.com"
 
 const translations = {
   es: {
@@ -38,7 +38,7 @@ const translations = {
     messagePlaceholder: "I want to invest, collaborate, or learn more about your approach...",
     subjectPrefix: "New message from",
     focusValue: "Investments, partnerships, and growth",
-    audienceValue: "Latinos, business owners, and investors",
+    audienceValue: "Business owners, and investors",
   },
 }
 
