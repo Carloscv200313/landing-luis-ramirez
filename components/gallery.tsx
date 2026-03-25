@@ -34,7 +34,7 @@ const galleryItems = [
   },
   {
     id: 2,
-    image: "/presentaciones/Luis-beige-acompañado.jpg",
+    image: "/presentaciones/Luis-real-state.jpeg",
     title: { es: "Alianzas", en: "Partnerships" },
     objectPosition: "center top",
     layoutClass: "lg:col-span-5",
@@ -43,7 +43,7 @@ const galleryItems = [
   {
     id: 3,
     image: "/presentaciones/Luis-estado.jpg",
-    title: { es: "Escenario", en: "Stage" },
+    title: { es: "Speaker", en: "Speaker" },
     objectPosition: "center top",
     layoutClass: "lg:col-span-4",
     aspectClass: "aspect-[3/4] md:aspect-[4/5]",
