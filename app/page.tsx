@@ -6,6 +6,8 @@ import Hero from "@/components/hero"
 import Biography from "@/components/biography"
 import Concerts from "@/components/concerts"
 import Gallery from "@/components/gallery"
+import Testimonials from "@/components/testimonials"
+import PinterestGallery from "@/components/pinterest-gallery"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
 
@@ -19,6 +21,8 @@ export default function Home() {
       <Biography language={language} />
       <Concerts language={language} />
       <Gallery language={language} />
+      <Testimonials language={language} />
+      <PinterestGallery language={language} />
       <Contact language={language} />
       <Footer language={language} />
     </div>
