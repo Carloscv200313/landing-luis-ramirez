@@ -14,6 +14,7 @@ type TestimonialFormState = {
   name: string
   role: string
   quote: string
+  rating: number
 }
 
 type GalleryFormState = {
@@ -26,6 +27,7 @@ const emptyTestimonial: TestimonialFormState = {
   name: "",
   role: "",
   quote: "",
+  rating: 5,
 }
 
 const emptyGallery: GalleryFormState = {
@@ -40,10 +42,9 @@ const translations = {
     heading: "Comparte tu experiencia",
     subheading:
       "Puedes dejar un testimonio o enviar una imagen inspirada en tu camino. Todo entra primero a revision antes de publicarse.",
-    testimonialTab: "Testimonio",
-    galleryTab: "Imagen",
     testimonialTitle: "Enviar testimonio",
     testimonialCopy: "Cuéntanos cómo fue tu experiencia, qué valor encontraste o qué te dejó la conversación.",
+    rating: "Calificacion",
     name: "Nombre",
     role: "Rol o etapa",
     quote: "Tu testimonio",
@@ -55,12 +56,15 @@ const translations = {
     sendTestimonial: "Enviar testimonio",
     sendImage: "Enviar imagen",
     sending: "Enviando...",
+    successTitle: "Gracias",
     successTestimonial: "Gracias. Tu testimonio fue recibido y quedo pendiente de aprobacion.",
     successImage: "Gracias. Tu imagen fue recibida y quedo pendiente de aprobacion.",
+    successButton: "Perfecto",
     genericError: "No pudimos enviar tu aporte en este momento. Intenta nuevamente.",
     namePlaceholder: "Tu nombre",
     rolePlaceholder: "Ej. Inversionista, agente, emprendedor",
     quotePlaceholder: "Escribe aqui tu experiencia con Luis Ramirez.",
+    ratingLabel: "Selecciona cuantas estrellas le das a tu experiencia.",
     submittedByPlaceholder: "Tu nombre",
     boardTitlePlaceholder: "Ej. Espacio con vision",
     imageHint: "JPG, PNG o WEBP. Maximo 6 MB.",
@@ -71,10 +75,9 @@ const translations = {
     heading: "Share your experience",
     subheading:
       "You can leave a testimonial or submit an image inspired by your journey. Everything is reviewed before being published.",
-    testimonialTab: "Testimonial",
-    galleryTab: "Image",
     testimonialTitle: "Submit a testimonial",
     testimonialCopy: "Tell us what your experience was like, what value you found, or what the conversation gave you.",
+    rating: "Rating",
     name: "Name",
     role: "Role or stage",
     quote: "Your testimonial",
@@ -86,12 +89,15 @@ const translations = {
     sendTestimonial: "Send testimonial",
     sendImage: "Send image",
     sending: "Sending...",
+    successTitle: "Thank you",
     successTestimonial: "Thanks. Your testimonial was received and is pending approval.",
     successImage: "Thanks. Your image was received and is pending approval.",
+    successButton: "Perfect",
     genericError: "We could not submit your contribution right now. Please try again.",
     namePlaceholder: "Your name",
     rolePlaceholder: "Ex. Investor, agent, entrepreneur",
     quotePlaceholder: "Write your experience with Luis Ramirez here.",
+    ratingLabel: "Select how many stars you want to give your experience.",
     submittedByPlaceholder: "Your name",
     boardTitlePlaceholder: "Ex. Space with vision",
     imageHint: "JPG, PNG, or WEBP. Maximum 6 MB.",
@@ -103,17 +109,31 @@ function FieldLabel({ label }: { label: string }) {
   return <label className="mb-2 block text-sm font-semibold text-charcoal">{label}</label>
 }
 
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      className={`h-6 w-6 ${filled ? "text-[#c8a24b]" : "text-[#d7d0c4]"}`}
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      aria-hidden="true"
+    >
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.176 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 0 0 .951-.69l1.07-3.292Z" />
+    </svg>
+  )
+}
+
 export default function CommunityContribute({ language, defaultMode, triggerLabel }: CommunityContributeProps) {
   const t = translations[language]
   const [isOpen, setIsOpen] = useState(false)
-  const [activeMode, setActiveMode] = useState<"testimonial" | "gallery">(defaultMode)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [testimonialForm, setTestimonialForm] = useState<TestimonialFormState>(emptyTestimonial)
   const [galleryForm, setGalleryForm] = useState<GalleryFormState>(emptyGallery)
   const [testimonialState, setTestimonialState] = useState({ loading: false, message: "", error: "" })
   const [galleryState, setGalleryState] = useState({ loading: false, message: "", error: "" })
+  const [hoveredRating, setHoveredRating] = useState(0)
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen && !successMessage) {
       return
     }
 
@@ -123,14 +143,33 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [isOpen])
+  }, [isOpen, successMessage])
+
+  useEffect(() => {
+    if (!successMessage) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccessMessage(null)
+    }, 2400)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [successMessage])
 
   const openModal = () => {
-    setActiveMode(defaultMode)
+    setHoveredRating(0)
+    setTestimonialState({ loading: false, message: "", error: "" })
+    setGalleryState({ loading: false, message: "", error: "" })
     setIsOpen(true)
   }
 
-  const closeModal = () => setIsOpen(false)
+  const closeModal = () => {
+    setHoveredRating(0)
+    setIsOpen(false)
+  }
 
   const submitTestimonial = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,7 +191,10 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
       }
 
       setTestimonialForm(emptyTestimonial)
-      setTestimonialState({ loading: false, message: t.successTestimonial, error: "" })
+      setHoveredRating(0)
+      setTestimonialState({ loading: false, message: "", error: "" })
+      setIsOpen(false)
+      setSuccessMessage(t.successTestimonial)
     } catch (error) {
       setTestimonialState({
         loading: false,
@@ -187,7 +229,9 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
       }
 
       setGalleryForm(emptyGallery)
-      setGalleryState({ loading: false, message: t.successImage, error: "" })
+      setGalleryState({ loading: false, message: "", error: "" })
+      setIsOpen(false)
+      setSuccessMessage(t.successImage)
     } catch (error) {
       setGalleryState({
         loading: false,
@@ -224,43 +268,43 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
 
             <div className="max-w-2xl pr-10">
               <p className="mb-4 text-xs font-medium uppercase tracking-[0.28em] text-charcoal/55">{t.moderation}</p>
-              <h3 className="mb-3 text-charcoal">{t.heading}</h3>
-              <p className="text-base leading-relaxed text-charcoal/72">{t.subheading}</p>
+              <h3 className="mb-3 text-charcoal">
+                {defaultMode === "testimonial" ? t.testimonialTitle : t.imageTitle}
+              </h3>
+              <p className="text-base leading-relaxed text-charcoal/72">
+                {defaultMode === "testimonial" ? t.testimonialCopy : t.imageCopy}
+              </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3 border-b border-taupe/15 pb-5">
-              <button
-                type="button"
-                onClick={() => setActiveMode("testimonial")}
-                className={`inline-flex min-h-11 items-center justify-center px-5 text-sm font-semibold transition-colors duration-300 ${
-                  activeMode === "testimonial"
-                    ? "bg-charcoal text-warm-white"
-                    : "border border-charcoal/15 bg-warm-white text-charcoal hover:border-gold hover:text-gold"
-                }`}
-              >
-                {t.testimonialTab}
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveMode("gallery")}
-                className={`inline-flex min-h-11 items-center justify-center px-5 text-sm font-semibold transition-colors duration-300 ${
-                  activeMode === "gallery"
-                    ? "bg-charcoal text-warm-white"
-                    : "border border-charcoal/15 bg-warm-white text-charcoal hover:border-gold hover:text-gold"
-                }`}
-              >
-                {t.galleryTab}
-              </button>
-            </div>
-
-            {activeMode === "testimonial" ? (
+            <div className="mt-8 border-t border-taupe/15 pt-8">
+              {defaultMode === "testimonial" ? (
               <form onSubmit={submitTestimonial} className="mt-8">
-                <div className="mb-6">
-                  <h4 className="mb-3 text-charcoal">{t.testimonialTitle}</h4>
-                  <p className="text-charcoal/70">{t.testimonialCopy}</p>
-                </div>
-
                 <div className="space-y-5">
+                  <div>
+                    <FieldLabel label={t.rating} />
+                    <div className="flex items-center gap-2">
+                      {Array.from({ length: 5 }).map((_, index) => {
+                        const value = index + 1
+                        const activeRating = hoveredRating || testimonialForm.rating
+
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => setTestimonialForm((current) => ({ ...current, rating: value }))}
+                            onMouseEnter={() => setHoveredRating(value)}
+                            onMouseLeave={() => setHoveredRating(0)}
+                            className="rounded-sm transition-transform hover:scale-105 focus:outline-none"
+                            aria-label={`${value} star${value === 1 ? "" : "s"}`}
+                          >
+                            <StarIcon filled={value <= activeRating} />
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <small className="mt-2 block text-charcoal/55">{t.ratingLabel}</small>
+                  </div>
+
                   <div>
                     <FieldLabel label={t.name} />
                     <input
@@ -304,12 +348,6 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
                   </div>
                 ) : null}
 
-                {testimonialState.message ? (
-                  <div className="mt-6 border border-[#d7cfb2] bg-[#fbf7ea] px-4 py-3 text-sm text-[#6b5832]">
-                    {testimonialState.message}
-                  </div>
-                ) : null}
-
                 <div className="mt-8 flex justify-end">
                   <button
                     type="submit"
@@ -322,11 +360,6 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
               </form>
             ) : (
               <form onSubmit={submitGallery} className="mt-8">
-                <div className="mb-6">
-                  <h4 className="mb-3 text-charcoal">{t.imageTitle}</h4>
-                  <p className="text-charcoal/70">{t.imageCopy}</p>
-                </div>
-
                 <div className="space-y-5">
                   <div>
                     <FieldLabel label={t.boardTitle} />
@@ -376,12 +409,6 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
                   </div>
                 ) : null}
 
-                {galleryState.message ? (
-                  <div className="mt-6 border border-[#d7cfb2] bg-[#fbf7ea] px-4 py-3 text-sm text-[#6b5832]">
-                    {galleryState.message}
-                  </div>
-                ) : null}
-
                 <div className="mt-8 flex justify-end">
                   <button
                     type="submit"
@@ -393,6 +420,33 @@ export default function CommunityContribute({ language, defaultMode, triggerLabe
                 </div>
               </form>
             )}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {successMessage ? (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/45 px-4" onClick={() => setSuccessMessage(null)}>
+          <div
+            className="w-full max-w-md border border-taupe/15 bg-[#faf8f5] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-[#c8a24b]">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="mb-3 text-charcoal">{t.successTitle}</h3>
+            <p className="text-charcoal/80">{successMessage}</p>
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSuccessMessage(null)}
+                className="inline-flex min-h-11 items-center justify-center bg-charcoal px-6 py-3 text-sm font-semibold text-warm-white transition-colors duration-300 hover:bg-charcoal/90"
+              >
+                {t.successButton}
+              </button>
+            </div>
           </div>
         </div>
       ) : null}

@@ -6,6 +6,7 @@ const testimonialSubmissionSchema = z.object({
   name: z.string().min(2).max(120),
   role: z.string().min(2).max(120),
   quote: z.string().min(20).max(700),
+  rating: z.number().int().min(1).max(5),
 })
 
 export async function POST(request: Request) {

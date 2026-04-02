@@ -29,3 +29,6 @@ create index if not exists testimonial_submissions_status_created_at_idx
 
 create index if not exists gallery_submissions_status_created_at_idx
   on public.gallery_submissions (status, created_at desc);
+
+alter table public.testimonial_submissions enable row level security;
+alter table public.gallery_submissions enable row level security;

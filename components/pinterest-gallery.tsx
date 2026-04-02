@@ -26,7 +26,7 @@ const translations = {
   es: {
     heading: "Inspiracion",
     subheading:
-      "Una seleccion visual de ambientes, propiedades y referencias que conectan con la vision de crecimiento, inversion y estilo.",
+      "Una mezcla de comunidad, oportunidades y resultados. Aqui ves como las conexiones correctas llevan a negocios reales.",
     cta: "Subir una imagen",
   },
   en: {

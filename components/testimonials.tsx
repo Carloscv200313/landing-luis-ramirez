@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react"
 import CommunityContribute from "@/components/community-contribute"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 interface TestimonialsProps {
   language: "es" | "en"
@@ -168,32 +175,46 @@ export default function Testimonials({ language }: TestimonialsProps) {
           <CommunityContribute language={language} defaultMode="testimonial" triggerLabel={t.cta} />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {allTestimonials.map((testimonial) => (
-            <article key={testimonial.key} className="border border-taupe/15 bg-warm-white p-7">
-              <Stars count={testimonial.rating} />
-              <p className="mt-5 text-lg leading-relaxed text-charcoal/85">“{testimonial.quote}”</p>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: allTestimonials.length > 3,
+          }}
+          className="px-1 md:px-3"
+        >
+          <CarouselContent className="-ml-6">
+            {allTestimonials.map((testimonial) => (
+              <CarouselItem key={testimonial.key} className="basis-[88%] pl-6 sm:basis-[72%] lg:basis-1/2 xl:basis-1/3">
+                <article className="flex h-full min-h-[320px] flex-col border border-taupe/15 bg-warm-white p-7">
+                  <Stars count={testimonial.rating} />
+                  <p className="mt-5 text-lg leading-relaxed text-charcoal/85">“{testimonial.quote}”</p>
 
-              <div className="mt-8 flex items-center gap-4 border-t border-taupe/10 pt-5">
-                {testimonial.avatarUrl ? (
-                  <img
-                    src={testimonial.avatarUrl}
-                    alt={testimonial.name}
-                    className="h-14 w-14 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-charcoal text-sm font-semibold text-warm-white">
-                    {getInitials(testimonial.name)}
+                  <div className="mt-auto flex items-center gap-4 border-t border-taupe/10 pt-5">
+                    {testimonial.avatarUrl ? (
+                      <img
+                        src={testimonial.avatarUrl}
+                        alt={testimonial.name}
+                        className="h-14 w-14 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-charcoal text-sm font-semibold text-warm-white">
+                        {getInitials(testimonial.name)}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-semibold text-charcoal">{testimonial.name}</p>
+                      <small className="text-charcoal/60">{testimonial.role}</small>
+                    </div>
                   </div>
-                )}
-                <div>
-                  <p className="font-semibold text-charcoal">{testimonial.name}</p>
-                  <small className="text-charcoal/60">{testimonial.role}</small>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
+                </article>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="mt-8 flex justify-end gap-3 pr-1 md:pr-3">
+            <CarouselPrevious className="static translate-y-0 border border-charcoal/15 bg-warm-white text-charcoal hover:border-gold hover:text-gold disabled:opacity-35" />
+            <CarouselNext className="static translate-y-0 border border-charcoal/15 bg-warm-white text-charcoal hover:border-gold hover:text-gold disabled:opacity-35" />
+          </div>
+        </Carousel>
       </div>
     </section>
   )

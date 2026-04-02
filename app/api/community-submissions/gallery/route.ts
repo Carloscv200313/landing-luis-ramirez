@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { insertGallerySubmission, isCommunityConfigured, uploadGalleryImage } from "@/lib/community-supabase"
+import { insertGallerySubmission, isGallerySubmissionConfigured, uploadGalleryImage } from "@/lib/community-supabase"
 
 const MAX_IMAGE_SIZE = 6 * 1024 * 1024
 const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp"]
@@ -12,11 +12,11 @@ const gallerySchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    if (!isCommunityConfigured()) {
+    if (!isGallerySubmissionConfigured()) {
       return NextResponse.json(
         {
           error:
-            "La galeria comunitaria ya esta lista, pero falta configurar Supabase en el servidor para recibir imagenes.",
+            "La galeria comunitaria ya esta lista, pero falta configurar Supabase y Cloudinary en el servidor para recibir imagenes.",
         },
         { status: 500 },
       )
@@ -42,10 +42,11 @@ export async function POST(request: Request) {
       submittedBy: formData.get("submittedBy"),
     })
 
-    const imageUrl = await uploadGalleryImage(image, data.submittedBy, data.title)
+    const upload = await uploadGalleryImage(image, data.submittedBy, data.title)
     await insertGallerySubmission({
       ...data,
-      imageUrl,
+      imageUrl: upload.imageUrl,
+      cloudinaryPublicId: upload.cloudinaryPublicId,
     })
 
     return NextResponse.json({ ok: true })
