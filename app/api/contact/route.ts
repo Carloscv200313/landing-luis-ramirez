@@ -39,6 +39,11 @@ function formatContactNote(data: z.infer<typeof contactSchema>) {
   ].join("\n")
 }
 
+function buildOpportunityName(data: z.infer<typeof contactSchema>) {
+  const baseName = `${data.firstName} ${data.lastName}`.trim()
+  return `Website Lead - ${baseName}`
+}
+
 function getHeaders(apiKey: string) {
   return {
     Authorization: `Bearer ${apiKey}`,
@@ -51,6 +56,8 @@ export async function POST(request: Request) {
   try {
     const apiKey = process.env.GHL_API_KEY
     const locationId = process.env.GHL_LOCATION_ID
+    const pipelineId = process.env.GHL_OPPORTUNITY_PIPELINE_ID
+    const pipelineStageId = process.env.GHL_OPPORTUNITY_STAGE_ID
 
     if (!apiKey || !locationId) {
       return NextResponse.json(
@@ -124,6 +131,38 @@ export async function POST(request: Request) {
         },
         { status: noteResponse.status },
       )
+    }
+
+    if (pipelineId && pipelineStageId) {
+      const opportunityResponse = await fetch(`${GHL_BASE_URL}/opportunities/`, {
+        method: "POST",
+        headers: getHeaders(apiKey),
+        body: JSON.stringify({
+          locationId,
+          contactId,
+          pipelineId,
+          pipelineStageId,
+          name: buildOpportunityName(data),
+          source: "website",
+          status: "open",
+          monetaryValue: 0,
+        }),
+        cache: "no-store",
+      })
+
+      if (!opportunityResponse.ok) {
+        const opportunityPayload = await opportunityResponse.json().catch(() => null)
+
+        return NextResponse.json(
+          {
+            error:
+              opportunityPayload?.message ||
+              opportunityPayload?.error ||
+              "El contacto se creo en GHL, pero no se pudo crear la oportunidad en el pipeline configurado.",
+          },
+          { status: opportunityResponse.status },
+        )
+      }
     }
 
     return NextResponse.json({ ok: true })
