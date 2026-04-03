@@ -279,8 +279,14 @@ export default function Contact({ language }: ContactProps) {
       </section>
 
       {showSuccessModal ? (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-charcoal/50 px-4">
-          <div className="w-full max-w-md border border-taupe/15 bg-warm-white p-8 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/55 px-4 py-6 backdrop-blur-[2px]"
+          onClick={() => setShowSuccessModal(false)}
+        >
+          <div
+            className="relative w-full max-w-md border border-taupe/15 bg-[#faf8f5] p-8 shadow-[0_28px_90px_rgba(0,0,0,0.22)]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-gold">
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

@@ -113,7 +113,6 @@ export async function POST(request: Request) {
       method: "POST",
       headers: getHeaders(apiKey),
       body: JSON.stringify({
-        locationId,
         body: formatContactNote(data),
       }),
       cache: "no-store",
